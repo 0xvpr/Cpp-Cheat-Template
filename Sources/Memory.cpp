@@ -1,17 +1,15 @@
 #include "Memory.hpp"
 
 [[nodiscard]]
-uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size) {
+uintptr_t memory::FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size) {
 
     uintptr_t addr = ptr;
 
-    for (size_t i = 0; i < size; i++)
-    {
+    for (size_t i = 0; i < size; i++) {
         addr = *(uintptr_t *)addr;
         addr += offsets[i];
 
-        if (*(uintptr_t *)addr == 0)
-        { 
+        if (*(uintptr_t *)addr == 0) { 
             return 0;
         }
     }
@@ -19,17 +17,26 @@ uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size) {
     return addr;
 }
 
-void Patch(char* dst, char* src, size_t size) {
+[[nodiscard]]
+bool memory::Patch(char* dst, char* src, size_t size) {
 
     DWORD oldprotect;
 
     VirtualProtect(dst, size, PAGE_EXECUTE_WRITECOPY, &oldprotect);
     memcpy(dst, src, size); 
     VirtualProtect(dst, size, oldprotect, &oldprotect);
+
+    for (size_t i = 0; i < size; i++, dst++, src++) {
+        if (*dst != *src) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 [[nodiscard]]
-bool Detour(void* hookedFunc, void* myFunc, size_t size) {
+bool memory::Detour(void* hookedFunc, void* myFunc, size_t size) {
 
     if (size < 5) {
         return false;
@@ -49,7 +56,7 @@ bool Detour(void* hookedFunc, void* myFunc, size_t size) {
 }
 
 [[nodiscard]]
-char* TrampHook(char* src, char* dst, size_t size) {
+char* memory::TrampHook(char* src, char* dst, size_t size) {
 
     if (size < 5) {
         return 0;
@@ -62,9 +69,9 @@ char* TrampHook(char* src, char* dst, size_t size) {
     *(gateway + size) = (char)0xE9;
     *(uintptr_t *)(gateway + size + 1) = gateJmpAddress;
 
-    if (Detour(src, dst, size)) {
+    if (memory::Detour(src, dst, size)) {
         return gateway;
     } else {
-        return NULL;
+        return nullptr;
     }
 }

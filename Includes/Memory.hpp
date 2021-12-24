@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <cstdint>
 
+namespace memory {
+
 /**
  * Find Dynamic Memory Address of an embedded process.
  *
@@ -21,7 +23,7 @@ uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size);
  * @param: char* destination, char* source, size_t size
  * @return: void
 **/
-void Patch(char* dst, char* src, size_t size);
+bool Patch(char* dst, char* src, size_t size);
 
 /**
  * Hooks into a function and detours the target function to another function
@@ -38,5 +40,7 @@ bool Detour(void* targetFunc, void* myFunc, size_t size);
  * @return: char*
 **/
 char* TrampHook(char* src, char* dst, size_t size);
+
+}
 
 #endif // MEM_HPP

@@ -42,14 +42,14 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
     
     if (GetD3D9Device(d3d9Device, sizeof(d3d9Device))) {
         memcpy(oEndScene_bytes, d3d9Device[42], 7);
-        oEndScene = (tEndScene)TrampHook((char *)d3d9Device[42], (char *)hkEndScene, 7);
+        oEndScene = (tEndScene)memory::TrampHook((char *)d3d9Device[42], (char *)hkEndScene, 7);
     }
 
     while (!(bShutdown = events::HandleKeyboard())) {
         // Main Loop
     }
 
-    Patch((char *)d3d9Device[42], (char *)oEndScene_bytes, 7);
+    memory::Patch((char *)d3d9Device[42], (char *)oEndScene_bytes, 7);
     FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
     return TRUE;
 }
