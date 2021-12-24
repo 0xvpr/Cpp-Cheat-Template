@@ -1,7 +1,7 @@
 /**
  * Creator:   VPR
- * Created:   August 27th, 2021
- * Updated:   December 9th, 2021
+ * Created:   December 24th, 2021
+ * Updated:   December 24th, 2021
  * 
  * Description:
  *     Template for Video Game hacking using pure C
@@ -51,29 +51,24 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
 
     memory::Patch((char *)d3d9Device[42], (char *)oEndScene_bytes, 7);
     FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
+
     return TRUE;
 }
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 
     (void)lpReserved;
-    switch (dwReason)
-    {
-        case DLL_PROCESS_ATTACH:
-        {
+    switch (dwReason) {
+
+        case DLL_PROCESS_ATTACH: {
             dll_handle = (HWND)hInstance;
             DisableThreadLibraryCalls(hInstance);
             CreateThread(0, 0, MainThread, hInstance, 0, 0);
             break;
         }
-        case DLL_PROCESS_DETACH:
-        {
-            break;
-        }
-        default:
-        {
-            break;
-        }
+        case DLL_PROCESS_DETACH: { break; }
+        default:                 { break; }
+
     }
 
     return TRUE;

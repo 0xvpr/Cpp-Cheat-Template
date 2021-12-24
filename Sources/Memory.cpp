@@ -18,7 +18,7 @@ uintptr_t memory::FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t s
 }
 
 [[nodiscard]]
-bool memory::Patch(char* dst, char* src, size_t size) {
+bool memory::Patch(void* dst, void* src, size_t size) {
 
     DWORD oldprotect;
 
@@ -26,8 +26,10 @@ bool memory::Patch(char* dst, char* src, size_t size) {
     memcpy(dst, src, size); 
     VirtualProtect(dst, size, oldprotect, &oldprotect);
 
-    for (size_t i = 0; i < size; i++, dst++, src++) {
-        if (*dst != *src) {
+    unsigned char* destination = (unsigned char *)dst;
+    unsigned char* source = (unsigned char *)src;
+    for (size_t i = 0; i < size; i++, destination++, source++) {
+        if (*destination != *source ) {
             return false;
         }
     }
@@ -74,4 +76,35 @@ char* memory::TrampHook(char* src, char* dst, size_t size) {
     } else {
         return nullptr;
     }
+}
+
+[[nodiscard]]
+static inline BOOL CompareByteArray(unsigned char* data, unsigned char* pattern, size_t pattern_size) {
+
+    for (size_t i = 0; i < pattern_size; i++, pattern++, data++) {
+        if (*pattern == '\0') {
+            continue;
+        } else if (*data != *pattern) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+[[nodiscard]]
+unsigned char* memory::FindPattern(unsigned char* base_addr, size_t img_size, unsigned char* pattern, size_t pattern_size) {
+
+    BYTE first = pattern[0];
+    PBYTE last = base_addr + img_size - pattern_size;
+
+    for (; base_addr < last; ++base_addr) {
+        if (*base_addr != first) {
+            continue;
+        } else if (CompareByteArray(base_addr, pattern, pattern_size)) {
+            return base_addr;
+        }
+    }
+
+    return NULL;
 }
