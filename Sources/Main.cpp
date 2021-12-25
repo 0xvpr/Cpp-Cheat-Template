@@ -49,7 +49,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
         // Main Loop
     }
 
-    memory::Patch((char *)d3d9Device[42], (char *)oEndScene_bytes, 7);
+    memory::Patch(d3d9Device[42], oEndScene_bytes, 7);
     FreeLibraryAndExitThread((HMODULE)lpReserved, 0);
 
     return TRUE;

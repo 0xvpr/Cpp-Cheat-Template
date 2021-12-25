@@ -38,21 +38,21 @@ bool memory::Patch(void* dst, void* src, size_t size) {
 }
 
 [[nodiscard]]
-bool memory::Detour(void* hookedFunc, void* myFunc, size_t size) {
+bool memory::Detour(void* targetFunc, void* myFunc, size_t size) {
 
     if (size < 5) {
         return false;
     }
 
     DWORD dwProtect;
-    VirtualProtect(hookedFunc, size, PAGE_EXECUTE_READWRITE, &dwProtect);
+    VirtualProtect(targetFunc, size, PAGE_EXECUTE_READWRITE, &dwProtect);
 
-    memset(hookedFunc, 0x90, size); // memset nop
-    uintptr_t relative_addr = ((uintptr_t)myFunc - (uintptr_t)hookedFunc) - 5;
+    memset(targetFunc, 0x90, size); // memset nop
+    uintptr_t relative_addr = ((uintptr_t)myFunc - (uintptr_t)targetFunc) - 5;
 
-    *(unsigned char *)hookedFunc = 0xE9; // replace with jmp
-    *(uintptr_t *)((uintptr_t)hookedFunc + 1) = relative_addr;
-    VirtualProtect(hookedFunc, size, dwProtect, &dwProtect);
+    *(unsigned char *)targetFunc = 0xE9; // replace with jmp
+    *(uintptr_t *)((uintptr_t)targetFunc + 1) = relative_addr;
+    VirtualProtect(targetFunc, size, dwProtect, &dwProtect);
 
     return true;
 }

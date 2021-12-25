@@ -3,10 +3,8 @@
 
 #include "D3d9Hook.hpp"
 
-static LPD3DXFONT m_font;
-static LPD3DXFONT m_font_small;
-
 namespace draw {
+
     void DrawBorderBox(int x, int y, int w, int h, int thickness, D3DCOLOR Colour, LPDIRECT3DDEVICE9 d3dDevice);
     void DrawFilledRect(int x, int y, int w, int h, D3DCOLOR color, LPDIRECT3DDEVICE9 d3dDevice);
     void DrawText(LPCSTR text, int x, int y, int width, int height, D3DCOLOR color, LPD3DXFONT font);
@@ -23,4 +21,4 @@ namespace draw {
 
 }
 
-#endif /* _DRAWING_H */
+#endif // DRAWING_HPP

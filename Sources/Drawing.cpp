@@ -1,5 +1,8 @@
 #include "Drawing.hpp"
 
+LPD3DXFONT m_font = nullptr;
+LPD3DXFONT m_font_small = nullptr;
+
 void draw::DrawBorderBox(int x, int y, int w, int h, int thickness, D3DCOLOR color, LPDIRECT3DDEVICE9 d3dDevice) {
 
     draw::DrawFilledRect(x, y, w, thickness, color, d3dDevice);                 // Top horizontal line

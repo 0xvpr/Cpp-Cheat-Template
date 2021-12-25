@@ -10,8 +10,9 @@ BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
     DWORD wndProcId;
     GetWindowThreadProcessId(handle, &wndProcId);
 
-    if (GetCurrentProcessId() != wndProcId)
+    if (GetCurrentProcessId() != wndProcId) {
         return TRUE; // skip to next g_window
+    }
 
     g_window = handle;
     return FALSE; // g_window found abort search
@@ -21,7 +22,7 @@ BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
 HWND GetProcessWindow() {
 
     g_window = NULL;
-    EnumWindows(EnumWindowsCallback, (LPARAM)NULL);
+    EnumWindows(EnumWindowsCallback, (LPARAM)nullptr);
 
     return g_window;
 }
@@ -41,7 +42,9 @@ bool GetD3D9Device(void** pTable, size_t Size) {
     IDirect3DDevice9* pDummyDevice = NULL;
 
     // options to create dummy device
-    D3DPRESENT_PARAMETERS d3dpp = { 0 };
+    D3DPRESENT_PARAMETERS d3dpp;
+    memset(&d3dpp, 0, sizeof(d3dpp));
+
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
     d3dpp.hDeviceWindow = GetProcessWindow();
     d3dpp.Windowed = true;
@@ -54,14 +57,13 @@ bool GetD3D9Device(void** pTable, size_t Size) {
         dummyDeviceCreated = IDirect3D9_CreateDevice(pD3D, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDummyDevice);
 
         if (dummyDeviceCreated != S_OK) {
-            IDirect3DDevice9_Release(pD3D);
+            pD3D->Release();
             return false;
         }
     }
-
     memcpy(pTable, *(void ***)pDummyDevice, Size);
 
-    IDirect3DDevice9_Release(pDummyDevice);
-    IDirect3DDevice9_Release(pD3D);
+    pDummyDevice->Release();
+    pD3D->Release();
     return true;
 }

@@ -8,12 +8,12 @@
 
 TARGET="HitmanBloodMoney.exe"     # Change as necessary
 PAYLOAD="Bin/Release/Payload.dll" # Change as necessary
-PIDJEON_PATH="~/.toolkit"         # Change as necessary
+PIDJEON_PATH="${HOME}/.toolkit"         # Change as necessary
 
 export PATH=$PATH:"${PIDJEON_PATH}"
 
 function inject {
-    pidjeon_x86.exe "${TARGET}" "${PAYLOAD}" -i ManualMap
+    pidjeon_x86.exe "${TARGET}" "${PAYLOAD}"
 }
 
 inject

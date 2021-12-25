@@ -1,18 +1,18 @@
-PROJECT     = Payload.dll
+PROJECT     = Payload
 
 ARCH        = Win32
 #ARCH       = Win64
 
 CMAKE       = cmake.exe
-CMAKE_FLAGS =
 TOOLCHAIN   = 
+CMAKE_FLAGS =
 
 BUILD       = Build
 SOURCE      = Sources
 INCLUDE     = Includes
 
-SOURCES     = $(wildcard Sources/*.cpp)
-OBJECTS     = $(patsubst Sources/%.cpp,build/CMakeFiles/Testing.dir/Sources/%.cpp.o,$(SOURCES))
+SOURCES     = $(wildcard $(SOURCE)/*.cpp)
+OBJECTS     = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/CMakeFiles/$(PROJECT).dir/$(SOURCE)/%.cpp.o,$(SOURCES))
 
 all: $(PROJECT)
 $(PROJECT): release debug
