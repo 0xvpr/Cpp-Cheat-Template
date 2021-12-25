@@ -26,7 +26,7 @@ void render::Menu(LPDIRECT3DDEVICE9 d3dDevice) {
         draw::DrawBorderBox(coordinates.x, coordinates.y, 140, 100, 4, draw::color::Black, d3dDevice);
 
         // Draw text
-        draw::DrawText("[ VPR Template]", coordinates.x + 7, coordinates.y + 10, 140, 20, draw::color::White, m_font);
+        draw::DrawText("[ VPR Template ]", coordinates.x + 7, coordinates.y + 10, 140, 20, draw::color::White, m_font);
         draw::DrawText("End to Eject", coordinates.x + 12, coordinates.y + 35, 140, 20, draw::color::LightGrey, m_font);
     } else {
         factor = 0.25;
