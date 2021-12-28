@@ -21,12 +21,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
 include_directories(${TARGET} "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include")
 
 # Include directories
-include_directories(${TARGET} Includes)
-set(INCLUDE_DIR Includes)
+include_directories(${TARGET} Include)
+set(INCLUDE_DIR Include)
 
 # Source directories
-set(SOURCE_DIR Sources)
-set(ASM_DIR Sources/Assembly)
+set(SOURCE_DIR Source)
+set(ASM_DIR ${SOURCE_DIR}/Assembly)
 
 # Add sources
 set(SOURCES 
