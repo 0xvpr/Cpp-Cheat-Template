@@ -1,55 +1,71 @@
-#ifndef MEM_HPP
-#define MEM_HPP
+#ifndef MEMORY_HPP
+#define MEMORY_HPP
 
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
 #endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstdint>
+#include <vector>
 
 namespace memory {
 
 /**
  * Finds the Dynamic Memory Access address of an embedded process.
  *
- * @param:  uintptr_t ptr
- * @param:  unsigned offsets[]
- * @param:  size_t size
+ * @param:  ptr
+ * @param:  offsets
+ * @param:  size
  *
- * @return: uintptr_t
+ * @return: addr
 **/
-uintptr_t FindDynamicAddress(uintptr_t ptr, unsigned offsets[], size_t size);
+template <typename T> [[nodiscard]]
+T FindDynamicAddress(uintptr_t ptr, const std::vector<unsigned>& offsets) {
+
+    uintptr_t addr = ptr;
+
+    for (const auto& offset : offsets) {
+        addr  = *(uintptr_t *)addr;
+        addr += offset;
+
+        if (*(uintptr_t *)addr == 0) { 
+            return 0;
+        }
+    }
+
+    return reinterpret_cast<T>(addr);
+}
 
 /**
  * Byte replacement from source to destination.
  *
- * @param:  char* destination
- * @param:  char* source
- * @param:  size_t size
+ * @param:  destination
+ * @param:  source
+ * @param:  size
  *
- * @return: void
+ * @return: bSuccess
 **/
 bool Patch(void* dst, void* src, size_t size);
 
 /**
  * Hooks into a function and detours the target function to another function.
  *
- * @param:  void* targetFunc
- * @param:  void* myFunc
- * @param:  size_t size
+ * @param:  fTargetFunc
+ * @param:  fMyFunc
+ * @param:  size
  *
- * @return: bool
+ * @return: bSuccess
 **/
-bool Detour(void* targetFunc, void* myFunc, size_t size);
+bool Detour(void* fTargetFunc, void* fMyFunc, size_t size);
 
 /**
  * Hooks into a function and detours the target function to another function, then jumps back.
  *
- * @param:  char* src
- * @param:  char* dst
- * @param:  size_t size
+ * @param:  src
+ * @param:  dst
+ * @param:  size
  *
- * @return: char*
+ * @return: addr
 **/
 char* TrampHook(char* targetFunc, char* myFunc, size_t size);
 
@@ -67,4 +83,4 @@ unsigned char* FindPattern(unsigned char* base_addr, size_t img_size, unsigned c
 
 }
 
-#endif // MEM_HPP
+#endif // MEMORY_HPP

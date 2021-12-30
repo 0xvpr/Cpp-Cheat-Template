@@ -1,9 +1,14 @@
 #include "Events.hpp"
 #include "Hacks.hpp"
 
+bool bCheatsEnabled = false;
+
 bool events::HandleKeyboard(void) {
     
-    // Handle Keyboard Events
+    if (GetAsyncKeyState(VK_TAB) & 1) {
+        bCheatsEnabled = !bCheatsEnabled;
+    }
+
     if (GetAsyncKeyState(VK_END)) {
         return true;
     }

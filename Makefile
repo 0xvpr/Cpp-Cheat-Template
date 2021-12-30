@@ -8,8 +8,8 @@ TOOLCHAIN   =
 CMAKE_FLAGS =
 
 BUILD       = Build
-SOURCE      = Sources
-INCLUDE     = Includes
+SOURCE      = Source
+INCLUDE     = Include
 
 SOURCES     = $(wildcard $(SOURCE)/*.cpp)
 OBJECTS     = $(patsubst $(SOURCE)/%.cpp,$(BUILD)/CMakeFiles/$(PROJECT).dir/$(SOURCE)/%.cpp.o,$(SOURCES))
